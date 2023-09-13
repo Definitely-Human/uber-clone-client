@@ -11,6 +11,8 @@
         "tailwind:build": "tailwindcss build -i src/tailwind.css -o public/styles.css"
     },
     "dependencies": {
+        "@apollo/client": "^3.8.3",
+        "graphql": "^16.8.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
