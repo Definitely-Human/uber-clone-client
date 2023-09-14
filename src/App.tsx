@@ -1,10 +1,12 @@
-import { useState } from "react";
 import LoggedOutRouter from "./routers/logged-out-router";
+import { gql, useQuery, useReactiveVar } from "@apollo/client";
+import LoggedInRouter from "./routers/logged-in-router";
+import { isLoggedInVar } from "./apollo";
 
 function App() {
-    const [count, setCount] = useState(0);
+    const isLoggedIn = useReactiveVar(isLoggedInVar);
 
-    return <LoggedOutRouter />;
+    return isLoggedIn ? <LoggedInRouter /> : <LoggedOutRouter />;
 }
 
 export default App;
