@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "../pages/login";
+import Login from "../pages/Login";
 import CreateAccount from "../pages/CreateAccount";
 
 const LoggedOutRouter = () => {
