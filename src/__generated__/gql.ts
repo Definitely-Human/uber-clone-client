@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n    mutation my_login($email: String!, $password: String!) {\n        login(input: { email: $email, password: $password }) {\n            ok\n            token\n        }\n    }\n": types.My_LoginDocument,
+    "\n    mutation my_login($loginInput: LoginInput!) {\n        login(input: $loginInput) {\n            ok\n            token\n            error\n        }\n    }\n": types.My_LoginDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    mutation my_login($email: String!, $password: String!) {\n        login(input: { email: $email, password: $password }) {\n            ok\n            token\n        }\n    }\n"): (typeof documents)["\n    mutation my_login($email: String!, $password: String!) {\n        login(input: { email: $email, password: $password }) {\n            ok\n            token\n        }\n    }\n"];
+export function gql(source: "\n    mutation my_login($loginInput: LoginInput!) {\n        login(input: $loginInput) {\n            ok\n            token\n            error\n        }\n    }\n"): (typeof documents)["\n    mutation my_login($loginInput: LoginInput!) {\n        login(input: $loginInput) {\n            ok\n            token\n            error\n        }\n    }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

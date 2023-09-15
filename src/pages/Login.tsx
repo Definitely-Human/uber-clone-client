@@ -1,13 +1,18 @@
 import { useForm } from "react-hook-form";
 import FormError from "../components/FormError";
 import { useMutation } from "@apollo/client";
-import { gql } from "../gql";
+import { gql } from "../__generated__";
+import { My_LoginMutation } from "../__generated__/graphql";
+import logo from "../images/logo.svg";
+import Button from "../components/button";
+import { Link } from "react-router-dom";
 
 const LOGIN_MUTATION = gql(/* GraphQL */ `
-    mutation my_login($email: String!, $password: String!) {
-        login(input: { email: $email, password: $password }) {
+    mutation my_login($loginInput: LoginInput!) {
+        login(input: $loginInput) {
             ok
             token
+            error
         }
     }
 `);
@@ -18,30 +23,41 @@ interface ILoginForm {
 }
 
 const Login = () => {
-    const {
-        register,
-        getValues,
-        formState: { errors },
-        handleSubmit,
-    } = useForm<ILoginForm>();
-    const [loginMutation, { data }] = useMutation(LOGIN_MUTATION);
-    const onSubmit = () => {
-        const { email, password } = getValues();
-        loginMutation({
-            variables: {
-                email,
-                password,
-            },
-        });
+    const { register, getValues, formState, handleSubmit } =
+        useForm<ILoginForm>({ mode: "onBlur" });
+    const onCompleted = (data: My_LoginMutation) => {
+        console.log(data);
     };
-    console.log(data);
+
+    const [loginMutation, { data: loginMutationResult, loading }] = useMutation(
+        LOGIN_MUTATION,
+        {
+            onCompleted,
+        }
+    );
+    const onSubmit = () => {
+        if (!loading) {
+            const { email, password } = getValues();
+            loginMutation({
+                variables: {
+                    loginInput: {
+                        email,
+                        password,
+                    },
+                },
+            });
+        }
+    };
     return (
-        <div className="h-screen flex items-center justify-center bg-gray-800">
-            <div className="bg-white w-full max-w-lg pt-7 pb-7 rounded-lg text-center">
-                <h3 className=" text-2xl text-gray-800">Log In</h3>
+        <div className="h-screen flex items-center flex-col pt-10 lg:pt-32">
+            <div className="w-full max-w-screen-sm flex px-5 flex-col items-center">
+                <img src={logo} alt="logo" className="w-60 mb-10" />
+                <h4 className="w-full text-left text-3xl mb-5 font-medium">
+                    Welcome back
+                </h4>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="grid gap-3 my-5 px-5"
+                    className="grid gap-3 my-5 w-full"
                 >
                     <input
                         {...register("email", {
@@ -52,8 +68,10 @@ const Login = () => {
                         placeholder="Email"
                         className="input"
                     />
-                    {errors.email?.message && (
-                        <FormError errorMessage={errors.email?.message} />
+                    {formState.errors.email?.message && (
+                        <FormError
+                            errorMessage={formState.errors.email?.message}
+                        />
                     )}
 
                     <input
@@ -65,12 +83,32 @@ const Login = () => {
                         placeholder="Password"
                         className="input"
                     />
-                    {errors.password?.message && (
-                        <FormError errorMessage={errors.password?.message} />
+                    {formState.errors.password?.message && (
+                        <FormError
+                            errorMessage={formState.errors.password?.message}
+                        />
                     )}
 
-                    <button className="mt-3 btn">Log In</button>
+                    <Button
+                        canClick={formState.isValid}
+                        loading={loading}
+                        actionText="Log In"
+                    />
+                    {loginMutationResult?.login.error && (
+                        <FormError
+                            errorMessage={loginMutationResult.login.error}
+                        />
+                    )}
                 </form>
+                <div>
+                    New to Uber?{" "}
+                    <Link
+                        to="/create-account"
+                        className="text-lime-600 hover:underline"
+                    >
+                        Create an Account!
+                    </Link>
+                </div>
             </div>
         </div>
     );
