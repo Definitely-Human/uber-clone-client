@@ -1,19 +1,14 @@
-import { gql } from "../__generated__";
-import { useQuery } from "@apollo/client";
-import { MeQuery } from "../__generated__/graphql";
-import {
-    Route,
-    BrowserRouter as Router,
-    Routes,
-    Navigate,
-} from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Restaurants from "../pages/client/restaurants";
 import Header from "../components/Header";
 import { useMe } from "../hooks/useMe";
+import NotFound from "../pages/NotFound";
+import { ConfirmEmail } from "../pages/user/ConfirmEmail";
 
 const ClientRouter = () => (
     <>
         <Route path="/" element={<Restaurants />}></Route>
+        <Route path="/confirm" element={<ConfirmEmail />}></Route>
     </>
 );
 
@@ -33,7 +28,9 @@ const LoggedInRouter = () => {
             <Header />
             <Routes>
                 {data.me.role === "Client" && ClientRouter()}
-                <Route path="*" element={<Navigate to="/" />} />
+
+                <Route path="*" element={<NotFound />} />
+                {/* <Route path="*" element={<Navigate to="/" />} /> */}
             </Routes>
         </Router>
     );
