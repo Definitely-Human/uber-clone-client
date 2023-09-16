@@ -1,8 +1,19 @@
-import React from "react";
-import { isLoggedInVar } from "../apollo";
 import { gql } from "../__generated__";
 import { useQuery } from "@apollo/client";
 import { MeQuery } from "../__generated__/graphql";
+import {
+    Route,
+    BrowserRouter as Router,
+    Routes,
+    Navigate,
+} from "react-router-dom";
+import Restaurants from "../pages/client/restaurants";
+
+const ClientRouter = () => (
+    <>
+        <Route path="/" element={<Restaurants />}></Route>
+    </>
+);
 
 const ME_QUERY = gql(/* GraphQL */ `
     query me {
@@ -27,9 +38,12 @@ const LoggedInRouter = () => {
         );
     }
     return (
-        <>
-            <div>{data.me.role}</div>;
-        </>
+        <Router>
+            <Routes>
+                {data.me.role === "Client" && ClientRouter()}
+                <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+        </Router>
     );
 };
 
