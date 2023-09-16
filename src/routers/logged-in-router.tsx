@@ -8,6 +8,8 @@ import {
     Navigate,
 } from "react-router-dom";
 import Restaurants from "../pages/client/restaurants";
+import Header from "../components/Header";
+import { useMe } from "../hooks/useMe";
 
 const ClientRouter = () => (
     <>
@@ -15,19 +17,8 @@ const ClientRouter = () => (
     </>
 );
 
-const ME_QUERY = gql(/* GraphQL */ `
-    query me {
-        me {
-            id
-            email
-            role
-            verified
-        }
-    }
-`);
-
 const LoggedInRouter = () => {
-    const { data, loading, error } = useQuery<MeQuery>(ME_QUERY);
+    const { data, loading, error } = useMe();
     if (!data || loading || error) {
         return (
             <div className="h-screen flex justify-center items-center">
@@ -39,6 +30,7 @@ const LoggedInRouter = () => {
     }
     return (
         <Router>
+            <Header />
             <Routes>
                 {data.me.role === "Client" && ClientRouter()}
                 <Route path="*" element={<Navigate to="/" />} />
