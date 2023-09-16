@@ -6,6 +6,8 @@ import { My_LoginMutation } from "../__generated__/graphql";
 import logo from "../images/logo.svg";
 import Button from "../components/button";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { isLoggedInVar } from "../apollo";
 
 const LOGIN_MUTATION = gql(/* GraphQL */ `
     mutation my_login($loginInput: LoginInput!) {
@@ -26,7 +28,8 @@ const Login = () => {
     const { register, getValues, formState, handleSubmit } =
         useForm<ILoginForm>({ mode: "onBlur" });
     const onCompleted = (data: My_LoginMutation) => {
-        console.log(data);
+        console.log(data.login.token);
+        isLoggedInVar(true);
     };
 
     const [loginMutation, { data: loginMutationResult, loading }] = useMutation(
@@ -50,6 +53,9 @@ const Login = () => {
     };
     return (
         <div className="h-screen flex items-center flex-col pt-10 lg:pt-32">
+            <Helmet>
+                <title>Uber | Login</title>
+            </Helmet>
             <div className="w-full max-w-screen-sm flex px-5 flex-col items-center">
                 <img src={logo} alt="logo" className="w-60 mb-10" />
                 <h4 className="w-full text-left text-3xl mb-5 font-medium">
@@ -62,6 +68,8 @@ const Login = () => {
                     <input
                         {...register("email", {
                             required: "Email is required.",
+                            pattern:
+                                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                         })}
                         type="email"
                         required
@@ -71,6 +79,11 @@ const Login = () => {
                     {formState.errors.email?.message && (
                         <FormError
                             errorMessage={formState.errors.email?.message}
+                        />
+                    )}
+                    {formState.errors.email?.type === "pattern" && (
+                        <FormError
+                            errorMessage={"Please enter a valid email."}
                         />
                     )}
 
