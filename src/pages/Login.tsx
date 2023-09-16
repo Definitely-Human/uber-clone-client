@@ -4,10 +4,11 @@ import { useMutation } from "@apollo/client";
 import { gql } from "../__generated__";
 import { My_LoginMutation } from "../__generated__/graphql";
 import logo from "../images/logo.svg";
-import Button from "../components/button";
+import Button from "../components/Button";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
-import { isLoggedInVar } from "../apollo";
+import { Helmet } from "react-helmet-async";
+import { authToken, isLoggedInVar } from "../apollo";
+import { LOCALSTORAGE_TOKEN } from "../constants";
 
 const LOGIN_MUTATION = gql(/* GraphQL */ `
     mutation my_login($loginInput: LoginInput!) {
@@ -28,8 +29,14 @@ const Login = () => {
     const { register, getValues, formState, handleSubmit } =
         useForm<ILoginForm>({ mode: "onBlur" });
     const onCompleted = (data: My_LoginMutation) => {
-        console.log(data.login.token);
-        isLoggedInVar(true);
+        const {
+            login: { ok, token },
+        } = data;
+        if (ok && token) {
+            localStorage.setItem(LOCALSTORAGE_TOKEN, token);
+            authToken(token);
+            isLoggedInVar(true);
+        }
     };
 
     const [loginMutation, { data: loginMutationResult, loading }] = useMutation(

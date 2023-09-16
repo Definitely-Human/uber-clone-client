@@ -4,9 +4,9 @@ import { useMutation } from "@apollo/client";
 import { gql } from "../__generated__";
 import { CreateAccountMutation, UserRole } from "../__generated__/graphql";
 import logo from "../images/logo.svg";
-import Button from "../components/button";
+import Button from "../components/Button";
 import { Link, redirect, useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const CREATE_ACCOUNT_MUTATION = gql(/* GraphQL */ `
     mutation createAccount($createAccountInput: CreateAccountInput!) {
