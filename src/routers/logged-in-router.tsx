@@ -4,11 +4,13 @@ import Header from "../components/Header";
 import { useMe } from "../hooks/useMe";
 import NotFound from "../pages/NotFound";
 import { ConfirmEmail } from "../pages/user/ConfirmEmail";
+import EditProfile from "../pages/user/EditProfile";
 
 const ClientRouter = () => (
     <>
         <Route path="/" element={<Restaurants />}></Route>
         <Route path="/confirm" element={<ConfirmEmail />}></Route>
+        <Route path="edit-profile" element={<EditProfile />}></Route>
     </>
 );
 
