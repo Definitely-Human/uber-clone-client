@@ -7,7 +7,7 @@ import logo from "../images/logo.svg";
 import Button from "../components/Button";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { authToken, isLoggedInVar } from "../apollo";
+import { authTokenVar, isLoggedInVar } from "../apollo";
 import { LOCALSTORAGE_TOKEN } from "../constants";
 
 const LOGIN_MUTATION = gql(/* GraphQL */ `
@@ -34,7 +34,7 @@ const Login = () => {
         } = data;
         if (ok && token) {
             localStorage.setItem(LOCALSTORAGE_TOKEN, token);
-            authToken(token);
+            authTokenVar(token);
             isLoggedInVar(true);
         }
     };
