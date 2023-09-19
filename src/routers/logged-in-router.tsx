@@ -1,16 +1,18 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import Restaurants from "../pages/client/restaurants";
+import Restaurants from "../pages/client/Restaurants";
 import Header from "../components/Header";
 import { useMe } from "../hooks/useMe";
 import NotFound from "../pages/NotFound";
 import { ConfirmEmail } from "../pages/user/ConfirmEmail";
 import EditProfile from "../pages/user/EditProfile";
+import Search from "../pages/client/Search";
 
 const ClientRouter = () => (
     <>
         <Route path="/" element={<Restaurants />}></Route>
         <Route path="/confirm" element={<ConfirmEmail />}></Route>
         <Route path="edit-profile" element={<EditProfile />}></Route>
+        <Route path="search" element={<Search />}></Route>
     </>
 );
 

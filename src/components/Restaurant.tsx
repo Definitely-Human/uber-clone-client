@@ -12,7 +12,7 @@ const Restaurant: React.FC<IRestaurantProps> = ({
     categoryName,
 }) => {
     return (
-        <div key={id} className="flex flex-col">
+        <div className="flex flex-col">
             <div
                 style={{
                     backgroundImage: `url(${coverImage})`,

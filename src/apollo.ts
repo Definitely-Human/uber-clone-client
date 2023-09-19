@@ -6,6 +6,8 @@ import {
 } from "@apollo/client";
 import { LOCALSTORAGE_TOKEN } from "./constants";
 import { setContext } from "@apollo/client/link/context";
+import { createFragmentRegistry } from "@apollo/client/cache";
+import { gql } from "./__generated__";
 
 const token = localStorage.getItem(LOCALSTORAGE_TOKEN);
 
@@ -44,5 +46,19 @@ export const client = new ApolloClient({
                 },
             },
         },
+        fragments: createFragmentRegistry(
+            gql(/* GraphQL */ `
+                fragment RestaurantParts on Restaurant {
+                    id
+                    name
+                    coverImage
+                    category {
+                        name
+                    }
+                    address
+                    isPromoted
+                }
+            `)
+        ),
     }),
 });

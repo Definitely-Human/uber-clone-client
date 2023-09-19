@@ -1,8 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { gql } from "../../__generated__";
-import Restaurant from "../../components/Restaurant";
 import { useState } from "react";
-import Button from "../../components/Button";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import Restaurant from "../../components/Restaurant";
 
 const RESTAURANTS_QUERY = gql(/* GraphQL */ `
     query restaurantsPage($input: RestaurantsInput!) {
@@ -36,6 +38,10 @@ const RESTAURANTS_QUERY = gql(/* GraphQL */ `
     }
 `);
 
+interface IFormProps {
+    searchTerm: string;
+}
+
 const Restaurants = () => {
     const [page, setPage] = useState(1);
     const { data, loading, error } = useQuery(RESTAURANTS_QUERY, {
@@ -45,14 +51,27 @@ const Restaurants = () => {
             },
         },
     });
+    const navigate = useNavigate();
     const onNextPageClick = () => setPage((current) => current + 1);
     const onPrevPageClick = () => setPage((current) => current - 1);
+    const { register, handleSubmit, getValues } = useForm<IFormProps>();
+    const onSearchSubmit = () => {
+        const { searchTerm } = getValues();
+        navigate({ pathname: "/search", search: `?term=${searchTerm}` });
+    };
     return (
         <div>
-            <form className="bg-gray-800 w-full py-40 flex items-center justify-center">
+            <Helmet>
+                <title>Home | Uber</title>
+            </Helmet>
+            <form
+                onSubmit={handleSubmit(onSearchSubmit)}
+                className="bg-gray-800 w-full py-40 flex items-center justify-center"
+            >
                 <input
-                    type="search"
-                    className="input w-3/12 rounded-md border-0"
+                    {...register("searchTerm", { required: true, min: 3 })}
+                    type="Search"
+                    className="input w-3/4 md:w-3/12 rounded-md border-0"
                     placeholder="Search restaurant..."
                 />
             </form>
@@ -76,11 +95,11 @@ const Restaurants = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="grid grid-cols-3 mt-10 gap-x-5 gap-y-10">
+                    <div className="grid md:grid-cols-3 mt-10 gap-x-5 gap-y-10">
                         {data?.restaurants.results?.map((restaurant) => {
-                            console.log(restaurant);
                             return (
                                 <Restaurant
+                                    key={restaurant.id}
                                     {...restaurant}
                                     categoryName={restaurant.category?.name}
                                 />
